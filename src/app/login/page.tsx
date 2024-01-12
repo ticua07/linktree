@@ -1,4 +1,5 @@
 'use client';
+
 import styles from './page.module.css'
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
@@ -10,16 +11,30 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const supabase = createClientComponentClient();
 
-    const signIn = async () => {
+    const logIn = async () => {
         await supabase.auth.signInWithPassword({
             email,
             password
         })
     }
     const signUp = async () => {
-        await supabase.auth.signUp({
+        if (user.trim() === '' || email.trim() === '' || password.trim() === '') {
+            return;
+        }
+
+        let userData = await supabase.auth.signUp({
             email,
             password
+        })
+
+        await supabase.from("usernames").insert({
+            userid: userData.data.user?.id,
+            username: user
+        })
+
+        await supabase.from("links").insert({
+            userid: userData.data.user?.id,
+            links: JSON.stringify({})
         })
     }
     const signOut = async () => {
@@ -39,7 +54,7 @@ export default function Login() {
         <div className={styles.container}>
 
             <div className={styles.container_buttons}>
-                <button onClick={signIn} className={styles.button}>log in</button>
+                <button onClick={logIn} className={styles.button}>log in</button>
                 <button onClick={signUp} className={styles.button}>sign up</button>
                 <button onClick={signOut} className={styles.button}>sign out</button>
             </div>
