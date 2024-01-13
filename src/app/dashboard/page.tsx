@@ -47,7 +47,7 @@ function Dashboard() {
         if (url.trim() === "" || name.trim() === "" || links === null) { return }
 
         let new_links = [...links, { lid: crypto.randomUUID(), link: url, name }];
-        setLinks([...new_links]) // spreading new_links to tell react to re-render the application.
+        setLinks(new_links)
 
         await supabase.from("links").update({ links: JSON.stringify(new_links) }).eq("userid", user?.id)
     }
@@ -55,18 +55,21 @@ function Dashboard() {
     return (
         <div className={styles.container}>
             <div className={styles.title_container}>
-                <h1 >Dashboard for {user?.email} </h1>
+                <h1 className={styles.title}>Add a link</h1>
                 <div className={styles.form_container}>
                     <input value={name} onChange={(event) => { setName(event.target.value) }} className={[styles.form_elements, styles.input].join(" ")} type="text" placeholder="Name" />
                     <input value={url} onChange={(event) => { setUrl(event.target.value) }} className={[styles.form_elements, styles.input].join(" ")} type="url" placeholder="Url" />
-                    <button onClick={addLink} className={styles.form_elements} >Add link</button>
+                    <button onClick={addLink} className={[styles.form_elements, styles.button].join(" ")} >Add link</button>
                 </div>
             </div>
             {
                 links ? links.map((item: WebsiteLinks) => (
                     <div className={styles.link_container} key={item.lid}>
-                        <h2>{item.name} - <a target="_blank" className={styles.a} href={item.link}>{item.link}</a></h2>
-                        <button onClick={() => deleteItem(item.lid).then()}>Borrar</button>
+                        <div>
+                            <h2 className={styles.title}>{item.name}</h2>
+                            <a target="_blank" className={styles.a} href={item.link}>{item.link}</a>
+                        </div>
+                        <button className={styles.button} onClick={() => deleteItem(item.lid).then()}>Delete</button>
                     </div>
                 )) : <p>loading..</p>
             }
