@@ -10,8 +10,6 @@ interface Params {
     params: { slug: string }
 }
 
-
-
 export default function ProductDetail({ params }: Params) {
     const supabase = createClientComponentClient<Database>();
     const router = useRouter();

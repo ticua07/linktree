@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { getLinksByUserid, useUser } from "../../../hooks/hooks";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { User, createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import styles from "./page.module.css"
 
 interface WebsiteLinks {
     name: string,
@@ -15,15 +16,17 @@ interface WebsiteLinks {
 function Dashboard() {
     // const user = useUser();
     const [links, setLinks] = useState<WebsiteLinks[] | null>(null);
-    const [userID, setUserID] = useState<string | null>()
+    const [user, setUser] = useState<User | null>()
     const supabase = createClientComponentClient();
 
+    const [name, setName] = useState("")
+    const [url, setUrl] = useState("")
 
     useEffect(() => {
         useUser().then((user) => {
             const getLinks = async () => {
                 let data = await getLinksByUserid(user?.id);
-                setUserID(user?.id)
+                setUser(user)
                 setLinks(data)
             }
             getLinks()
@@ -36,22 +39,35 @@ function Dashboard() {
 
     const deleteItem = async (lid: string) => {
         let temp_links = links?.filter((val) => val.lid !== lid) || []
-        console.log(links)
-        console.log(temp_links)
         setLinks(temp_links);
-        let { data, error } = await supabase.from("links").update({ links: JSON.stringify(temp_links) }).eq("userid", userID)
-        console.log(data, error)
+        await supabase.from("links").update({ links: JSON.stringify(temp_links) }).eq("userid", user?.id)
     };
 
+    const addLink = async () => {
+        if (url.trim() === "" || name.trim() === "" || links === null) { return }
+
+        let new_links = [...links, { lid: crypto.randomUUID(), link: url, name }];
+        setLinks([...new_links]) // spreading new_links to tell react to re-render the application.
+
+        await supabase.from("links").update({ links: JSON.stringify(new_links) }).eq("userid", user?.id)
+    }
 
     return (
-        <div>
+        <div className={styles.container}>
+            <div className={styles.title_container}>
+                <h1 >Dashboard for {user?.email} </h1>
+                <div className={styles.form_container}>
+                    <input value={name} onChange={(event) => { setName(event.target.value) }} className={[styles.form_elements, styles.input].join(" ")} type="text" placeholder="Name" />
+                    <input value={url} onChange={(event) => { setUrl(event.target.value) }} className={[styles.form_elements, styles.input].join(" ")} type="url" placeholder="Url" />
+                    <button onClick={addLink} className={styles.form_elements} >Add link</button>
+                </div>
+            </div>
             {
-                links ? links.map((item: WebsiteLinks, idx: number) => (
-                    <p key={idx}>
-                        {idx}. {item.lid} - {item.link}
-                        <a onClick={() => deleteItem(item.lid).then()}>a</a>
-                    </p>
+                links ? links.map((item: WebsiteLinks) => (
+                    <div className={styles.link_container} key={item.lid}>
+                        <h2>{item.name} - <a target="_blank" className={styles.a} href={item.link}>{item.link}</a></h2>
+                        <button onClick={() => deleteItem(item.lid).then()}>Borrar</button>
+                    </div>
                 )) : <p>loading..</p>
             }
         </div>
