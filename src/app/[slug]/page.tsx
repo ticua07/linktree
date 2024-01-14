@@ -2,7 +2,6 @@
 
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react";
 import { Database } from "../../../database";
 import { useLinksByUsername } from "../../../hooks/hooks";
 import styles from "./page.module.css"

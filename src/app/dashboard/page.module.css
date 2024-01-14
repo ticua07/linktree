@@ -68,9 +68,10 @@
 
 .button {
     padding: 10px;
-    flex: .225;
+    /* flex: .225; */
     border-radius: 6px;
     border: none;
     color: white;
     background-color: #b00020;
+    width: 100px;
 }
