@@ -99,3 +99,17 @@
 .add_button:active {
     opacity: 95%;
 }
+
+.log_out {
+    font-size: 14px;
+    text-align: start;
+    color: white;
+    font-family: Inter;
+    opacity: 60%;
+    cursor: pointer;
+    transition: opacity .15s;
+}
+
+.log_out:hover {
+    opacity: 100%;
+}

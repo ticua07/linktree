@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { getLinksByUserid, useUser } from "../../../hooks/hooks";
 import { User, createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import styles from "./page.module.css"
+import { useRouter } from "next/navigation";
 
 interface WebsiteLinks {
     name: string,
@@ -17,6 +18,7 @@ function Dashboard() {
     // const user = useUser();
     const [links, setLinks] = useState<WebsiteLinks[] | null>(null);
     const [user, setUser] = useState<User | null>()
+    const router = useRouter()
     const supabase = createClientComponentClient();
 
     const [name, setName] = useState("")
@@ -33,9 +35,6 @@ function Dashboard() {
         })
     }, [])
 
-    const addItem = () => {
-        console.log(crypto.randomUUID())
-    };
 
     const deleteItem = async (lid: string) => {
         let temp_links = links?.filter((val) => val.lid !== lid) || []
@@ -52,6 +51,11 @@ function Dashboard() {
         await supabase.from("links").update({ links: JSON.stringify(new_links) }).eq("userid", user?.id)
     }
 
+    const logOut = async () => {
+        await supabase.auth.signOut()
+        router.replace("/")
+    }
+
     return (
         <div className={styles.container}>
             <div className={styles.title_container}>
@@ -60,6 +64,8 @@ function Dashboard() {
                     <input value={name} onChange={(event) => { setName(event.target.value) }} className={[styles.form_elements, styles.input].join(" ")} type="text" placeholder="Name" />
                     <input value={url} onChange={(event) => { setUrl(event.target.value) }} className={[styles.form_elements, styles.input].join(" ")} type="url" placeholder="Url" />
                     <button onClick={addLink} className={[styles.add_button, styles.form_elements].join(" ")} >Add link</button>
+                    <span onClick={logOut} className={[styles.form_elements, styles.log_out].join(" ")}>Log Out</span>
+
                 </div>
             </div>
             {
@@ -73,7 +79,7 @@ function Dashboard() {
                     </div>
                 )) : <p className={styles.loading}>Loading...</p>
             }
-        </div>
+        </div >
     );
 }
 
