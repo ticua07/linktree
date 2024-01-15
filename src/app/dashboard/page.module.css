@@ -29,7 +29,8 @@
 }
 
 .form_elements {
-    width: 300px;
+    /* required important to override .button's width in buttons */
+    width: 300px !important;
 }
 
 .link_container {

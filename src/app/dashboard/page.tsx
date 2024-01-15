@@ -59,7 +59,7 @@ function Dashboard() {
                 <div className={styles.form_container}>
                     <input value={name} onChange={(event) => { setName(event.target.value) }} className={[styles.form_elements, styles.input].join(" ")} type="text" placeholder="Name" />
                     <input value={url} onChange={(event) => { setUrl(event.target.value) }} className={[styles.form_elements, styles.input].join(" ")} type="url" placeholder="Url" />
-                    <button onClick={addLink} className={[styles.form_elements, styles.button].join(" ")} >Add link</button>
+                    <button onClick={addLink} className={[styles.button, styles.form_elements].join(" ")} >Add link</button>
                 </div>
             </div>
             {
