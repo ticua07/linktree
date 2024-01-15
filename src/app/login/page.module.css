@@ -32,6 +32,14 @@
 
 .change_method {
     color: white;
+    font-family: Inter;
+    opacity: 60%;
+    cursor: pointer;
+    transition: opacity .15s;
+}
+
+.change_method:hover {
+    opacity: 100%;
 }
 
 
@@ -45,11 +53,28 @@
     padding: 5px;
     border-radius: 6px;
     border: solid 1px #333;
+    font-family: Inter;
 }
 
 .button {
-    padding: 10px;
-    flex: .225;
     border-radius: 6px;
     border: none;
+    height: 30px;
+    font-size: 16px;
+    font-family: Inter;
+    background-color: white;
+    color: black;
+    opacity: 95%;
+}
+
+.button:hover {
+    opacity: 100%;
+}
+
+.button:active {
+    opacity: 95%;
+}
+
+.error {
+    color: #FF6347;
 }

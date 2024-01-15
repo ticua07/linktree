@@ -33,6 +33,9 @@ export async function getLinksByUserid(userid: string | undefined): Promise<Webs
     const supabase = createClientComponentClient();
 
     let links = await supabase.from("links").select("links").eq("userid", userid);
+    if (links.data === undefined) {
+        return [];
+    }
     return JSON.parse((links.data?.[0].links || "[]") || null);
 }
 

@@ -5,12 +5,16 @@ export async function middleware(req: NextRequest) {
     const res = NextResponse.next();
     const supabase = createMiddlewareClient({ req, res });
 
-    // console.log("hola!")
     // Refresh session if expired - required for Server Components
-    await supabase.auth.getSession();
+    const { data } = await supabase.auth.getSession();
+
+    if (data.session?.user === undefined) {
+        return NextResponse.redirect(new URL("/login", req.url))
+    }
+
     return res
 }
 
 export const config = {
-    matcher: ['/:slug'],
+    matcher: ['/dashboard'],
 };
