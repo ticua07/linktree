@@ -22,7 +22,7 @@ export default function Home() {
                 <h1 className={styles.title}>Welcome to Linker</h1>
                 <h2 className={styles.subtitle}>Your one-stop solution for managing all your online presence.<br />Simplify your profile with Linker. </h2>
                 <div className={styles.button_container}>
-                    <a href="/login" className={styles.get_started}>Get started</a>
+                    {user ? <a href="/dashboard" className={styles.get_started}>Go to dashboard</a> : <a href="/login" className={styles.get_started}>Get started</a>}
                 </div>
             </div>
         </div>
